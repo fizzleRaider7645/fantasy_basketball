@@ -6,8 +6,12 @@ class UsersController < ApplicationController
 
   post '/login' do
     @user = User.find_by(username: params[:username])
-    session[:user_id] = @user.id
-    erb :'users/show'
+    if @user && @user.authenticate(params[:password])
+      session[:user_id] = @user.id
+      erb :'users/show'
+    else
+      redirect :'/login'
+    end
   end
 
   get '/new' do
