@@ -10,20 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_20_204553) do
+ActiveRecord::Schema.define(version: 2018_12_21_125515) do
 
   create_table "players", force: :cascade do |t|
     t.string "name"
     t.integer "team_id"
-    t.float "salary"
-    t.float "points"
   end
 
   create_table "teams", force: :cascade do |t|
     t.string "name"
     t.integer "owner_id"
     t.integer "roster_spots"
-    t.float "salary_cap"
   end
 
   create_table "users", force: :cascade do |t|
