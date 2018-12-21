@@ -1,7 +1,11 @@
 class UsersController < ApplicationController
 
   get '/login' do
-    erb :'users/login'
+    if logged_in?
+      redirect :'/show'
+    else
+      erb :'users/login'
+    end
   end
 
   post '/login' do
@@ -15,11 +19,15 @@ class UsersController < ApplicationController
   end
 
   get '/new' do
-    erb :'users/new'
+    if logged_in?
+      redirect :'/show'
+    else
+      erb :'users/new'
+    end
   end
 
   post '/new' do
-    if User.exists?(:email => params[:email]) || User.exists?(:username => params[:username])
+    if User.exists?(:email => params[:email], :username => params[:username])
       redirect :'/login'
     else
       @user = User.create(params) unless User.exists?(:email => params[:email])
@@ -29,8 +37,12 @@ class UsersController < ApplicationController
   end
 
   get '/show' do
-    @user = User.find_by(email: current_user[:email])
-    erb :'users/show'
+    if logged_in?
+      @user = User.find_by(email: current_user[:email])
+      erb :'users/show'
+    else
+      redirect :'/login'
+    end
   end
 
   get '/logout' do
