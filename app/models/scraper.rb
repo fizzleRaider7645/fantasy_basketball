@@ -2,18 +2,26 @@ class Scraper
 
   BASE_PATH = 'https://www.basketball-reference.com'
 
-  def self.get_doc
+  # def self.get_doc
+  #   html = open('https://www.basketball-reference.com/contracts/players.html')
+  #   doc = Nokogiri::HTML(html)
+  # end
+
+  def self.get_nba_player_names
     html = open('https://www.basketball-reference.com/contracts/players.html')
     doc = Nokogiri::HTML(html)
-  end
-
-  def self.get_nba_players
-    doc = Scraper.get_doc
     players_table = doc.css('.table_outer_container').css('tbody')
     players = players_table.css('tr').map { |row| row.children[1].css('a')[0] }
-    names = players.map { |name| name.text unless el.class == NilClass }.compact
+    names = players.map { |name| name.text unless name.class == NilClass }.compact
     # links = players.map { |player| player.attr("href") unless player.class == NilClass }.compact
     # points = Scraper.get_points(links)
+  end
+
+  def self.create_nba_players
+    names = Scraper.get_nba_player_names
+    names.each do |name|
+      Player.create(name: name)
+    end
   end
 
 
