@@ -7,5 +7,6 @@ end
 use Rack::MethodOverride
 # use SessionsController
 # use PostsController
+use PlayersController
 use UsersController
 run ApplicationController

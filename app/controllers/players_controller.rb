@@ -1,7 +1,11 @@
-class PostsController < ApplicationController
+class PlayersController < ApplicationController
 
-  get '/posts' do
-    "You are logged in as #{session[:email]}"
+  get '/players' do
+    if logged_in?
+      erb :'players/index'
+    else
+      redirect :'/login'
+    end
   end
 
   get '/posts/new' do
