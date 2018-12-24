@@ -8,11 +8,11 @@ class PlayersController < ApplicationController
     end
   end
 
-  get '/posts/new' do
-    if !session[:email]
-      redirect "/login"
+  get '/players/new' do
+    if logged_in?
+      erb :'players/new'
     else
-      "A new post form"
+      redirect :'/login'
     end
   end
 
