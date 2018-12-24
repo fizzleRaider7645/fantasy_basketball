@@ -10,8 +10,8 @@ class TeamsController < ApplicationController
   post '/team' do
     if logged_in?
       @team = Team.create(params)
-      @team.owner_id = current_user.id
-      @team.roster_spots = 0
+      @team.user_id = current_user.id
+      @team.roster_spots = 5
       @team.save
       erb :'teams/show'
     else
