@@ -13,7 +13,7 @@ class TeamsController < ApplicationController
       @team.user_id = current_user.id
       @team.roster_spots = 5
       @team.save
-      redirect :'/show'
+      redirect :'/teams/:id/edit'
     else
       redirect :'/login'
     end
@@ -40,9 +40,14 @@ class TeamsController < ApplicationController
   get '/teams/:id/edit' do
     if logged_in?
       @team = Team.find(params[:id])
+      @players = Player.all
       erb :'teams/edit'
     else
       redirect :'/login'
     end
+  end
+
+  post '/teams/:id/edit' do
+    binding.pry
   end
 end

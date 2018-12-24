@@ -3,7 +3,7 @@
   <% if @user.team %>
   <li><a href="/teams/show/<%=@user.team.id%>">See Roster</a></li>
   <li><a href="/users">See League Owners</a></li>
-  <li><a href="/teams/<%= @user.team.id %>/edit">Edit Team</a></li>
+  <li><a href="/teams/<%= @user.team.id %>/edit">Manage Team</a></li>
   <% else %>
   <li><a href="/teams/new">Create New Team</a></li>
   <% end %>
