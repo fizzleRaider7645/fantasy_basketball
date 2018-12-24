@@ -1,1 +1,6 @@
 <h1><%=@team.name%></h1>
+<h2>Your Lineup: </h2>
+<% @team.players.each do |player| %>
+<p><%= player.name %><p>
+<% end %>
+<h3><%= @team.roster_spots %> Roster Spots Available</h3>
