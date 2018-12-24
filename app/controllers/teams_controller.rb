@@ -7,7 +7,7 @@ class TeamsController < ApplicationController
     end
   end
 
-  post '/team' do
+  post '/teams' do
     if logged_in?
       @team = Team.create(params)
       @team.user_id = current_user.id
@@ -19,9 +19,19 @@ class TeamsController < ApplicationController
     end
   end
 
-  get '/team/new' do
+  get '/teams/new' do
     if logged_in?
+      @players = Player.all
       erb :'teams/new'
+    else
+      redirect :'/login'
+    end
+  end
+
+  get '/teams/show/:id' do
+    if logged_in?
+      @team = Team.find(params[:id])
+      erb :'teams/show'
     else
       redirect :'/login'
     end
