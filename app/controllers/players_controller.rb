@@ -8,6 +8,14 @@ class PlayersController < ApplicationController
     end
   end
 
+  get '/players/:id' do
+    if logged_in?
+      erb :'players/show'
+    else
+      redirect :'/login'
+    end
+  end
+
   get '/players/new' do
     if logged_in?
       erb :'players/new'
@@ -16,11 +24,12 @@ class PlayersController < ApplicationController
     end
   end
 
-  get '/posts/:id/edit' do
-    if !session[:email]
-      redirect "/login"
+  get '/players/:id/edit' do
+    if logged_in?
+      @player = Player.find(params[:id])
+      erb :'players/edit'
     else
-      "A edit post form"
+      redirect :'/login'
     end
   end
 end
