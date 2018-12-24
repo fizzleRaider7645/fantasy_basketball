@@ -1,6 +1,6 @@
 <h1>Show Page</h1>
-<%= @user.username %>
-<br>
-<a href="/players">Select Your Players, or Create Your Own</a>
-<br>
-<a href="/logout">Logout</a>
+<h2><%= @user.username %></h2>
+<ul>
+  <li><a href="/players">Create or Edit Your Team</a></li>
+  <li><a href="/logout">Logout</a></li>
+</ul>
