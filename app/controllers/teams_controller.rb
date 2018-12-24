@@ -13,7 +13,7 @@ class TeamsController < ApplicationController
       @team.user_id = current_user.id
       @team.roster_spots = 5
       @team.save
-      erb :'teams/show'
+      redirect :'/show'
     else
       redirect :'/login'
     end

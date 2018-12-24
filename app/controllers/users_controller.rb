@@ -45,6 +45,23 @@ class UsersController < ApplicationController
     end
   end
 
+  get '/show/:id' do
+    if logged_in?
+      
+    else
+      redirect :'/login'
+    end
+  end
+
+  get '/users' do
+    if logged_in?
+      @users = User.all
+      erb :'users/index'
+    else
+      redirect :'/login'
+    end
+  end
+
   get '/logout' do
     session.clear
     redirect :'/'
