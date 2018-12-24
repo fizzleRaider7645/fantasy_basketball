@@ -1,3 +1,6 @@
+<h1>Owners:</h1>
 <% @users.each do |user| %>
-<%= user.username %>
+<ul>
+  <li><a href="/show/<%=user.id%>"><%=user.username%></a></li>
+</ul>
 <% end %>

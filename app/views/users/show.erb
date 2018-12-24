@@ -1,8 +1,9 @@
-<h1>Welcome, <%= @user.username %></h1>
+<h1><%= @user.username %></h1>
 <ul>
-  <% unless @user.team %>
+  <% if @user.team %>
+  <li><a href="/users">All League Owners</a></li>
+  <% else %>
   <li><a href="/team/new">Create</a></li>
   <% end %>
-  <li><a href="/users">All League Owners</a></li>
-  <li><a href="/logout">Logout</a></li>
+    <li><a href="/logout">Logout</a></li>
 </ul>
