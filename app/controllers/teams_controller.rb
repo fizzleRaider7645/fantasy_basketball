@@ -40,7 +40,7 @@ class TeamsController < ApplicationController
   get '/teams/:id/edit' do
     if logged_in?
       @team = Team.find(params[:id])
-      @players = Player.all
+      @players = Player.all.select { |player| player.team_id == current_user.id || player.team_id == nil }
       erb :'teams/edit'
     else
       redirect :'/login'
@@ -48,6 +48,14 @@ class TeamsController < ApplicationController
   end
 
   post '/teams/:id/edit' do
-    binding.pry
+    if logged_in?
+      params[:player_ids].each do |i|
+        @player = Player.find(i)
+        current_user.team.players << @player
+        current_user.team.roster_spots -= 1
+        current_user.team.save
+        redirect :'/show'
+      end
+    end
   end
 end
