@@ -4,6 +4,12 @@
   <p><label for="team_name">Edit Team Name:</label>
     <input type="text" name="team_name"><p>
       <br>
+      <label>Create a Custom Player:</label>
+      <br>
+      <label>Name:</label>
+      <input  type="text" name="custom_player_name"</input>
+      <br>
+
       <p><label>Select Players: </label><p>
         <% @players.sort_by { |player| player.name }.each do |player| %>
         <ul>

@@ -50,9 +50,6 @@ class TeamsController < ApplicationController
   patch '/teams/:id/edit' do
     if logged_in?
       binding.pry
-
-    else
-      redirect :'/login'
     end
   end
 end
