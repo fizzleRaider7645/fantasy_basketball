@@ -2,7 +2,7 @@ class Team < ActiveRecord::Base
   belongs_to :user
   has_many :players
 
-  def current_roster_count
-    self.roster_spots - self.players.count
+  def at_limit?
+    self.players.count == 5
   end
 end

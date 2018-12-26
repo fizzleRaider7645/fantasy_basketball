@@ -49,6 +49,7 @@ class TeamsController < ApplicationController
     end
   end
 
+
   patch '/teams/:id/edit' do
     if logged_in?
       #team name check
@@ -59,35 +60,42 @@ class TeamsController < ApplicationController
       #end of team name check
 
       #custom player check
-      if params[:custom_player_name] != ""
+      if params[:custom_player_name] != "" && !current_user.team.at_limit?
         @player = Player.create(name: params[:custom_player_name])
         current_user.team.players << @player
       end
       #end of custom player check
 
       #check for players to add from checkbox
+      current_ids = current_user.team.players.map { |player| player.id }
+      incoming_ids = params[:player_ids].map(&:to_i)
+      #checking whether to clear team
       if params.keys.include?("player_ids")
-        params[:player_ids].each do |id|
-          @player = Player.find(id)
-          @player.team_id = current_user.team.id
-          @player.save
-
-          #check below for diff between incoming params and current player ids
-          #and delete those players not in incoming params
-          current_ids = current_user.team.players.map { |player| player.id }
-          incoming_ids = params[:player_ids].map(&:to_i)
-          if current_ids != incoming_ids
-            hold = incoming_ids + current_ids
-            players_to_delete = hold - (incoming_ids & current_ids)
-            players_to_delete.each do |id|
+        #checking if any adding or deleteing of players needs to occur
+        if current_ids != incoming_ids
+          incoming_ids.each do |id|
+            if !current_ids.include?(id)
               @player = Player.find(id)
               @player.team_id = nil
               @player.save
+              current_user.team.roster_spots += 1
+              current_user.team.save
+            else
+              @player.team_id = current_user.team.id
+              @player.save
+              current_user.team.roster_spots -= 1
+              current_user.team.save
             end
           end
-        end
+        else
+          redirect :'/show'
+          #end of adding / deleting check
+      end
+
       else
         current_user.team.players.clear
+        current_user.team.roster_spots = 5
+        current_user.team.save
       end
       redirect :'/show'
       #end of checkbox check
