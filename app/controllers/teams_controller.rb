@@ -41,7 +41,6 @@ class TeamsController < ApplicationController
   get '/teams/:id/edit' do
     @team = Team.find(params[:id])
     if logged_in? && @team.user_id == current_user.id
-      # @team = Team.find(params[:id])
       @players = Player.all.uniq { |player| player.name }.select { |player| player.team_id == current_user.id || player.team_id == nil }
       erb :'teams/edit'
     else
@@ -66,42 +65,67 @@ class TeamsController < ApplicationController
       end
       #end of custom player check
 
-      #check for players to add from checkbox
-      current_ids = current_user.team.players.map { |player| player.id }
-      incoming_ids = params[:player_ids].map(&:to_i)
-      #checking whether to clear team
-      if params.keys.include?("player_ids")
-        #checking if any adding or deleteing of players needs to occur
-        if current_ids != incoming_ids
-          incoming_ids.each do |id|
-            if !current_ids.include?(id)
-              @player = Player.find(id)
-              @player.team_id = nil
-              @player.save
-              current_user.team.roster_spots += 1
-              current_user.team.save
-            else
-              @player.team_id = current_user.team.id
-              @player.save
-              current_user.team.roster_spots -= 1
-              current_user.team.save
-            end
-          end
-        else
-          redirect :'/show'
-          #end of adding / deleting check
-      end
+#**************CHECKBOX LOGIC START********************************************
 
-      else
+      #When no players are checked / aka remove all players from team
+      if params[:player_ids] == nil
         current_user.team.players.clear
         current_user.team.roster_spots = 5
         current_user.team.save
       end
-      redirect :'/show'
-      #end of checkbox check
+        #end of no params logic
+
+      #When players are checked and
+      #there are no players currently on the roster
+
+      # if params[:player_ids] && current_user.team.players.empty?
+      #   params[:player_ids].each do |id|
+      #     @player = Player.find(id)
+      #     @player.team_id = current_user.team.id
+      #     @player.save
+      #     # current_user.team.roster_spots -= 1
+      #     # current_user.team.save
+      #   end
+      #   # Clear the params hash of the :player_ids' key to avoid falling into
+      #   #other if statments
+      #   params.except!(:player_ids)
+      # end
+      #end of case when they are checked players and empty current roster
+
+      #When there are checked players and players currently on roster
+      # if params[:player_ids] && !current_user.team.players.empty?
+      if params[:player_ids]
+        current_ids = current_user.team.players.map { |player| player.id }
+        incoming_ids = params[:player_ids].map(&:to_i)
+
+        #iterating throught current_ids
+        #to check to see if we have a current player not included in incoming_ids
+        current_ids.each do |id|
+          #if id in current_ids is not included in incoming_ids then delete
+          #that id
+          if !incoming_ids.include?(id)
+            @player = Player.find(id)
+            @player.team_id = nil
+            @player.save
+            # current_user.team.roster_spots += 1
+            # current_user.team.save
+          end
+        end
+
+        #iterating over incoming_ids as these players should be on roster
+        incoming_ids.each do |id|
+          @player = Player.find(id)
+          @player.team_id = current_user.team.id
+          @player.save
+          # current_user.team.roster_spots -= 1
+          # current_user.team.save
+        end
+      end
+      #end of check when there are checked players and players currently on roster
     else
       redirect :'/login'
-      #end of login check
     end
+    redirect :'/show'
+    #**************CHECKBOX LOGIC END********************************************
   end
 end
