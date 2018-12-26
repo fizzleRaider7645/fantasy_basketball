@@ -29,6 +29,7 @@ class TeamsController < ApplicationController
   end
 
   get '/teams/show/:id' do
+    #check if logged in
     if logged_in?
       @team = Team.find(params[:id])
       erb :'teams/show'
@@ -38,8 +39,9 @@ class TeamsController < ApplicationController
   end
 
   get '/teams/:id/edit' do
-    if logged_in?
-      @team = Team.find(params[:id])
+    @team = Team.find(params[:id])
+    if logged_in? && @team.user_id == current_user.id
+      # @team = Team.find(params[:id])
       @players = Player.all.uniq { |player| player.name }.select { |player| player.team_id == current_user.id || player.team_id == nil }
       erb :'teams/edit'
     else
@@ -87,8 +89,11 @@ class TeamsController < ApplicationController
       else
         current_user.team.players.clear
       end
+      redirect :'/show'
       #end of checkbox check
+    else
+      redirect :'/login'
+      #end of login check
     end
-    redirect :'/show'
   end
 end
