@@ -4,6 +4,10 @@
   <li><a href="/teams/show/<%=@user.team.id%>">See Roster</a></li>
   <li><a href="/users">See League Owners</a></li>
   <li><a href="/teams/<%= @user.team.id %>/edit">Manage Team</a></li>
+  <li><form method="post" action="/teams/<%= @user.team.id %>/delete">
+  <input id="hidden" type="hidden" name="_method" value="DELETE">
+  <input type="submit" value="delete team">
+  </form></li>
   <% else %>
   <li><a href="/teams/new">Create New Team</a></li>
   <% end %>
