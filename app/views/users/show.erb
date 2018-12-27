@@ -11,5 +11,9 @@
   <% else %>
   <li><a href="/teams/new">Create New Team</a></li>
   <% end %>
+  <li><form method="post" action="/users/<%= @user.id %>/delete">
+  <input id="hidden" type="hidden" name="_method" value="DELETE">
+  <input type="submit" value="delete account">
+  </form></li>
   <li><a href="/logout">Logout</a></li>
 </ul>

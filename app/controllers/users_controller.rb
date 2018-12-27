@@ -27,6 +27,7 @@ class UsersController < ApplicationController
   end
 
   post '/new' do
+    # binding.pry
     if User.exists?(:email => params[:email], :username => params[:username])
       redirect :'/login'
     else
@@ -66,6 +67,17 @@ class UsersController < ApplicationController
   get '/logout' do
     session.clear
     redirect :'/'
+  end
+
+  delete '/users/:id/delete' do
+    if logged_in?
+      @user = User.find(params[:id])
+      @user.team.players.clear unless @user.team == nil
+      User.delete(@user.id)
+      redirect :'/logout'
+    else
+      redirect :'/login'
+    end
   end
 
 end
