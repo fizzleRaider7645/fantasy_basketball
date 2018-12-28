@@ -41,7 +41,7 @@ class TeamsController < ApplicationController
   get '/teams/:id/edit' do
     @team = Team.find(params[:id])
     if logged_in? && @team.user_id == current_user.id
-      @players = Player.all.uniq { |player| player.name }.select { |player| player.team_id == current_user.id || player.team_id == nil }
+      @players = Player.all.uniq { |player| player.name }.select { |player| player.team_id == current_user.team.id || player.team_id == nil }
       erb :'teams/edit'
     else
       redirect :'/login'
@@ -108,10 +108,10 @@ class TeamsController < ApplicationController
   end
 
   delete '/teams/:id/delete' do
-    if logged_in?
-      @team = Team.find(params[:id])
+    @team = Team.find(params[:id])
+    if logged_in? && @team.id == current_user.team.id
       @team.players.clear
-      Team.delete(params[:id])
+      Team.delete(@team.id)
       redirect :'/show'
     else
       redirect :'/login'

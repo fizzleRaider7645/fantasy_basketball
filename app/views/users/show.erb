@@ -1,19 +1,23 @@
 <h1><%= @user.username %></h1>
 <ul>
-  <% if @user.team %>
+  <% if @user.team && current_user.id != @user.id%>
   <li><a href="/teams/show/<%=@user.team.id%>">See Roster</a></li>
+  <% end %>
+  <% if @user.team && current_user.id == @user.id %>
   <li><a href="/users">See League Owners</a></li>
   <li><a href="/teams/<%= @user.team.id %>/edit">Manage Team</a></li>
+  <li><a href="/teams/show/<%=@user.team.id%>">See Roster</a></li>
   <li><form method="post" action="/teams/<%= @user.team.id %>/delete">
   <input id="hidden" type="hidden" name="_method" value="DELETE">
   <input type="submit" value="delete team">
   </form></li>
-  <% else %>
-  <li><a href="/teams/new">Create New Team</a></li>
-  <% end %>
   <li><form method="post" action="/users/<%= @user.id %>/delete">
   <input id="hidden" type="hidden" name="_method" value="DELETE">
   <input type="submit" value="delete account">
-  </form></li>
   <li><a href="/logout">Logout</a></li>
+  </form></li>
+  <% end %>
+  <% if @user.team == nil  %>
+  <li><a href="/teams/new">Create New Team</a></li>
+  <% end %>
 </ul>
