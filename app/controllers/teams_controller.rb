@@ -69,6 +69,8 @@ class TeamsController < ApplicationController
         end
 
         current_user.team.players << @custom_player unless current_user.team.at_max?
+
+        #reset and adjust the team roster_spots count
         current_user.team.roster_spots = 5
         current_user.team.roster_spots -= current_user.team.players.count
         current_user.team.save
@@ -77,19 +79,22 @@ class TeamsController < ApplicationController
 
 #**************CHECKBOX LOGIC START********************************************
 
-      #When no players are checked and no custom player / aka remove all players from team
+      #When no players are checked and no custom player / remove all players from team
       if params[:player_ids] == nil && params[:custom_player_name] == ""
         current_user.team.players.clear
+        #reset and adjust the team roster_spots
         current_user.team.roster_spots = 5
         current_user.team.save
       end
-        #end of no params check
+        #end of no custom player && params check
 
       #When there are checked players
       if params[:player_ids]
         current_ids = current_user.team.players.map { |player| player.id }
         incoming_ids = params[:player_ids].map(&:to_i)
-        incoming_ids << @custom_player.id if @custom_player #this is needed in case of custom player and checked players
+
+        #the following if statement is needed in case of custom player and checked players
+        incoming_ids << @custom_player.id if @custom_player
 
         #iterating throught current_ids
         #to check to see if we have a current player not included in incoming_ids
@@ -107,8 +112,10 @@ class TeamsController < ApplicationController
         # iterating over incoming_ids as these players should be on roster
         incoming_ids.each do |id|
           @player = Player.find(id)
-          current_user.team.players << @player unless current_user.team.at_max?
+          @player.team_id = current_user.team.id unless current_user.team.at_max?
+          @player.save
         end
+        #reset and adjust the team roster_spots count
         current_user.team.roster_spots = 5
         current_user.team.roster_spots -= current_user.team.players.count
         current_user.team.save

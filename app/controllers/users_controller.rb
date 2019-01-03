@@ -27,10 +27,10 @@ class UsersController < ApplicationController
   end
 
   post '/new' do
-    if User.exists?(:email => params[:email], :username => params[:username])
+    if User.exists?(:email => params[:email]) || User.exists?(:username => params[:username])
       redirect :'/login'
     else
-      @user = User.create(params) unless User.exists?(:email => params[:email])
+      @user = User.create(params)
       session[:user_id] = @user.id
       redirect :'/show'
     end
