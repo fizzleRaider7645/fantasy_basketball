@@ -58,16 +58,20 @@ class TeamsController < ApplicationController
       end
       #end of team name edit check
 
-      #custom player check regardless if there are checked players
+      #custom player check
       if params[:custom_player_name] != ""
-        # current_user.team.players.clear unless current_user.team.players.empty?
         @custom_player = Player.create(name: params[:custom_player_name])
-        @custom_player.team_id = current_user.team.id
-        @custom_player.save
+
+        #in case of a custom player being created
+        #and no params[:player_ids] / clear all previously checked players
         if params[:player_ids].nil?
-          current_user.team.roster_spots -= 1
-          current_user.team.save
+          current_user.team.players.clear
         end
+
+        current_user.team.players << @custom_player unless current_user.team.at_max?
+        current_user.team.roster_spots = 5
+        current_user.team.roster_spots -= current_user.team.players.count
+        current_user.team.save
       end
       #end of custom player check
 
@@ -103,8 +107,6 @@ class TeamsController < ApplicationController
         # iterating over incoming_ids as these players should be on roster
         incoming_ids.each do |id|
           @player = Player.find(id)
-          # @player.team_id = current_user.team.id unless current_user.team.above_max?
-          # @player.save
           current_user.team.players << @player unless current_user.team.at_max?
         end
         current_user.team.roster_spots = 5
