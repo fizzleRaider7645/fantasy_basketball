@@ -59,13 +59,15 @@ class TeamsController < ApplicationController
       #end of team name edit check
 
       #custom player check regardless if there are checked players
-      if params[:custom_player_name] != "" && params[:player_ids] == nil || params[:player_ids]
-        current_user.team.players.clear unless current_user.team.players.empty?
-        @player = Player.create(name: params[:custom_player_name])
-        @player.team_id = current_user.team.id
-        @player.save
-        current_user.team.roster_spots -= 1 unless current_user.team.at_min?
-        current_user.team.save
+      if params[:custom_player_name] != ""
+        # current_user.team.players.clear unless current_user.team.players.empty?
+        @custom_player = Player.create(name: params[:custom_player_name])
+        @custom_player.team_id = current_user.team.id
+        @custom_player.save
+        if params[:player_ids].nil?
+          current_user.team.roster_spots -= 1
+          current_user.team.save
+        end
       end
       #end of custom player check
 
@@ -77,18 +79,20 @@ class TeamsController < ApplicationController
         current_user.team.roster_spots = 5
         current_user.team.save
       end
-        #end of no params logic
+        #end of no params check
 
       #When there are checked players
       if params[:player_ids]
         current_ids = current_user.team.players.map { |player| player.id }
         incoming_ids = params[:player_ids].map(&:to_i)
+        incoming_ids << @custom_player.id if @custom_player #this is needed in case of custom player and checked players
 
         #iterating throught current_ids
         #to check to see if we have a current player not included in incoming_ids
         current_ids.each do |id|
-          #if id in current_ids is not included in incoming_ids then delete
-          #that id
+
+          #if id in current_ids is not included in incoming_ids then set player.team_id
+          #to nil
           if !incoming_ids.include?(id)
             @player = Player.find(id)
             @player.team_id = nil
@@ -101,8 +105,11 @@ class TeamsController < ApplicationController
           @player = Player.find(id)
           @player.team_id = current_user.team.id
           @player.save
-          redirect :'/show'
         end
+        current_user.team.roster_spots = 5
+        current_user.team.roster_spots -= current_user.team.players.count
+        current_user.team.save
+        redirect :'/show'
       end
       #end of check when there are checked players and players currently on roster
     else
