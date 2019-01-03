@@ -58,17 +58,21 @@ class TeamsController < ApplicationController
       end
       #end of team name edit check
 
-      #custom player check
-      if params[:custom_player_name] != "" && !current_user.team.at_limit?
+      #custom player check regardless if there are checked players
+      if params[:custom_player_name] != "" && params[:player_ids] == nil || params[:player_ids]
+        current_user.team.players.clear unless current_user.team.players.empty?
         @player = Player.create(name: params[:custom_player_name])
-        current_user.team.players << @player
+        @player.team_id = current_user.team.id
+        @player.save
+        current_user.team.roster_spots -= 1 unless current_user.team.at_min?
+        current_user.team.save
       end
       #end of custom player check
 
 #**************CHECKBOX LOGIC START********************************************
 
-      #When no players are checked / aka remove all players from team
-      if params[:player_ids] == nil
+      #When no players are checked and no custom player / aka remove all players from team
+      if params[:player_ids] == nil && params[:custom_player_name] == ""
         current_user.team.players.clear
         current_user.team.roster_spots = 5
         current_user.team.save
@@ -97,6 +101,7 @@ class TeamsController < ApplicationController
           @player = Player.find(id)
           @player.team_id = current_user.team.id
           @player.save
+          redirect :'/show'
         end
       end
       #end of check when there are checked players and players currently on roster

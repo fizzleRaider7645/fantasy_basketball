@@ -72,6 +72,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     if logged_in? && @user.id == current_user.id
       @user.team.players.clear unless @user.team == nil
+      Team.delete(@user.team.id)
       User.delete(@user.id)
       redirect :'/logout'
     else
