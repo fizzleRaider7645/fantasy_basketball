@@ -103,8 +103,9 @@ class TeamsController < ApplicationController
         # iterating over incoming_ids as these players should be on roster
         incoming_ids.each do |id|
           @player = Player.find(id)
-          @player.team_id = current_user.team.id
-          @player.save
+          # @player.team_id = current_user.team.id unless current_user.team.above_max?
+          # @player.save
+          current_user.team.players << @player unless current_user.team.at_max?
         end
         current_user.team.roster_spots = 5
         current_user.team.roster_spots -= current_user.team.players.count

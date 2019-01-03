@@ -3,10 +3,6 @@ class Team < ActiveRecord::Base
   has_many :players
 
   def at_max?
-    self.roster_spots == 5
-  end
-
-  def at_min?
-    self.roster_spots == 0
+    self.players.length == 5
   end
 end
