@@ -1,5 +1,9 @@
 <h1><%=@team.name%></h1>
+<% if @team.user.id == current_user.id %>
 <h2>Your Lineup: </h2>
+<% else %>
+<h2>Lineup: </h2>
+<% end %>
 <% @team.players.each do |player| %>
 <p><%= player.name %><p>
 <% end %>

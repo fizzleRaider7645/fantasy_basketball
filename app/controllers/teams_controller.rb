@@ -9,13 +9,23 @@ class TeamsController < ApplicationController
 
   post '/teams' do
     if logged_in?
-      @team = Team.create(params)
-      @team.user_id = current_user.id
-      @team.roster_spots = 5
-      @team.save
-      redirect :'/show'
-    else
-      redirect :'/login'
+      @team = Team.new(params)
+      if @team.save
+        @team.user_id = current_user.id
+        @team.roster_spots = 5
+        @team.save
+        redirect :'/show'
+      else
+        @errors = @team.errors
+        redirect :'teams/new'
+      end
+    #   @team = Team.create(params)
+    #   @team.user_id = current_user.id
+    #   @team.roster_spots = 5
+    #   @team.save
+    #   redirect :'/show'
+    # else
+    #   redirect :'/login'
     end
   end
 
@@ -99,17 +109,16 @@ class TeamsController < ApplicationController
         #iterating throught current_ids
         #to check to see if we have a current player not included in incoming_ids
         current_ids.each do |id|
-
           #if id in current_ids is not included in incoming_ids then set player.team_id
           #to nil
           if !incoming_ids.include?(id)
-            @player = Player.find(id)
-            @player.team_id = nil
-            @player.save
+            @former_player = Player.find(id)
+            @former_player.team_id = nil
+            @former_player.save
           end
         end
 
-        # iterating over incoming_ids as these players should be on roster
+        #iterating over incoming_ids as these players should be on roster
         incoming_ids.each do |id|
           @player = Player.find(id)
           @player.team_id = current_user.team.id unless current_user.team.at_max?
