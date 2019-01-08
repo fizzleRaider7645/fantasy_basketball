@@ -109,10 +109,9 @@ class TeamsController < ApplicationController
 
         #shovel in the custom player unless there are alreay 5 or more players included
         new_players << @custom_player if @custom_player && new_players.length < 5
-
         #add/re-assign new players with limit of 5
-        new_players.take(5).each do |new_player|
-          current_user.team.players << new_player
+        new_players.each do |new_player|
+          current_user.team.players << new_player unless current_user.team.players.count == 5 && new_player.team_id == nil
         end
 #********************************FIN TEST******************************************
 

@@ -1,5 +1,9 @@
 <h1>Edit <%=@team.name%></h1>
-<h2>Remaining Roster Spots: <%=@team.roster_spots%></h2>
+<h3>Remaining Roster Spots: <%=@team.roster_spots%></h3>
+<% @team.players.each do |player| %>
+<p><%= player.name %></p>
+<% end %>
+<br>
 <form action="/teams/<%=@team.id%>/edit" method="post">
   <input id="hidden" type="hidden" name="_method" value="patch">
   <p><label for="team_name">Edit Team Name:</label>
