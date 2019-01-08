@@ -1,22 +1,21 @@
-# CelticsRoster
+# Fantasy Basketball
 
-This gem lists the roster of the current Boston Celtics, and allows the user
-to choose a player to see their stats from the previous game they played.
+This application allows users to create an account, a team, and populate that team
+with custom or current NBA players.
 
 ## Installation
 
 Clone repo "https://github.com/fizzleRaider7645/celtics_roster"
 cd into the file's location
-to run enter 'bin/celtics_roster' in terminal
+run bundle install
 
 ## Usage
 
-Run 'bin/celtics_roster' and enter the 'list number' associated with the
-player you would like to select. To exit, type 'exit'.
+Enter 'shotgun' in terminal and paste the URL in your browser. A user can either login if they already have an account or signup. Users can create a team and add up to five custom or current NBA players to their roster so long as they have the roster spots available.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/celtics_roster. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/fantasy_basketball. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
@@ -24,4 +23,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the CelticsRoster project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/celtics_roster/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the Fantasy Basketball project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/fantasy_basketball/blob/master/CODE_OF_CONDUCT.md).

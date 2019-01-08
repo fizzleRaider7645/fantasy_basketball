@@ -1,10 +1,4 @@
 <h1>Create Your Team</h1>
-<% if @errors %>
-<ul>
-<%@errors.each do |error|%>
-  <li><%=error.message%></li>
-</ul>
-<% end %>
 <form action="/teams" method="post">
   <p><label for="name">Team Name:</label>
   <input type="text" name="name"></input>

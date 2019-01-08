@@ -9,23 +9,13 @@ class TeamsController < ApplicationController
 
   post '/teams' do
     if logged_in?
-      @team = Team.new(params)
-      if @team.save
-        @team.user_id = current_user.id
-        @team.roster_spots = 5
-        @team.save
-        redirect :'/show'
-      else
-        @errors = @team.errors
-        redirect :'teams/new'
-      end
-    #   @team = Team.create(params)
-    #   @team.user_id = current_user.id
-    #   @team.roster_spots = 5
-    #   @team.save
-    #   redirect :'/show'
-    # else
-    #   redirect :'/login'
+      @team = Team.create(params)
+      @team.user_id = current_user.id
+      @team.roster_spots = 5
+      @team.save
+      redirect :'/show'
+    else
+      redirect :'/login'
     end
   end
 
@@ -78,7 +68,7 @@ class TeamsController < ApplicationController
           current_user.team.players.clear
         end
 
-        current_user.team.players << @custom_player unless current_user.team.at_max?
+        current_user.team.players << @custom_player unless params[:player_ids]
 
         #reset and adjust the team roster_spots count
         current_user.team.roster_spots = 5
@@ -118,10 +108,10 @@ class TeamsController < ApplicationController
           end
         end
 
-        #iterating over incoming_ids as these players should be on roster
-        incoming_ids.each do |id|
+        #iterating over incoming_ids as these players should be on roster with limit of 5
+        incoming_ids.take(5).each do |id|
           @player = Player.find(id)
-          @player.team_id = current_user.team.id unless current_user.team.at_max?
+          @player.team_id = current_user.team.id
           @player.save
         end
         #reset and adjust the team roster_spots count
