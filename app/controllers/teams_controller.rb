@@ -64,11 +64,13 @@ class TeamsController < ApplicationController
 
         #in case of a custom player being created
         #and no params[:player_ids] / clear all previously checked players
+        #and add custom player
         if params[:player_ids].nil?
           current_user.team.players.clear
+          current_user.team.players << @custom_player
         end
 
-        current_user.team.players << @custom_player unless params[:player_ids]
+        # current_user.team.players << @custom_player unless params[:player_ids] || current_user.team.at_max?
 
         #reset and adjust the team roster_spots count
         current_user.team.roster_spots = 5
@@ -90,30 +92,51 @@ class TeamsController < ApplicationController
 
       #When there are checked players
       if params[:player_ids]
-        current_ids = current_user.team.players.map { |player| player.id }
-        incoming_ids = params[:player_ids].map(&:to_i)
+        # current_ids = current_user.team.players.map { |player| player.id }
+        # incoming_ids = params[:player_ids].map(&:to_i)
+#********************************START TEST******************************************
 
-        #the following if statement is needed in case of custom player and checked players
-        incoming_ids << @custom_player.id if @custom_player
+        old_players = current_user.team.players
+        new_players = params[:player_ids].map { |id| Player.find(id) }
 
-        #iterating throught current_ids
-        #to check to see if we have a current player not included in incoming_ids
-        current_ids.each do |id|
-          #if id in current_ids is not included in incoming_ids then set player.team_id
-          #to nil
-          if !incoming_ids.include?(id)
-            @former_player = Player.find(id)
-            @former_player.team_id = nil
-            @former_player.save
+        #Delete any old players not included in the array of new players
+        old_players.each do |old_player|
+          if !new_players.include?(old_player)
+            old_player.team_id = nil
+            old_player.save
           end
         end
 
-        #iterating over incoming_ids as these players should be on roster with limit of 5
-        incoming_ids.take(5).each do |id|
-          @player = Player.find(id)
-          @player.team_id = current_user.team.id
-          @player.save
+        #shovel in the custom player unless there are alreay 5 or more players included
+        new_players << @custom_player if @custom_player && new_players.length < 5
+
+        #add/re-assign new players with limit of 5
+        new_players.take(5).each do |new_player|
+          current_user.team.players << new_player
         end
+#********************************FIN TEST******************************************
+
+        #the following if statement is needed in case of custom player and checked players
+        # incoming_ids << @custom_player.id if @custom_player
+        #iterating throught current_ids
+        #to check to see if we have a current player not included in incoming_ids
+        # current_ids.each do |id|
+        #   #if id in current_ids is not included in incoming_ids then set player.team_id
+        #   #to nil
+        #   if !incoming_ids.include?(id)
+        #     @former_player = Player.find(id)
+        #     @former_player.team_id = nil
+        #     @former_player.save
+        #   end
+        # end
+
+        #iterating over incoming_ids as these players should be on roster with limit of 5
+        # incoming_ids.take(5).each do |id|
+        #   @player = Player.find(id)
+        #   @player.team_id = current_user.team.id
+        #   @player.save
+        # end
+
         #reset and adjust the team roster_spots count
         current_user.team.roster_spots = 5
         current_user.team.roster_spots -= current_user.team.players.count

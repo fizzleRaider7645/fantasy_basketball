@@ -1,4 +1,5 @@
 <h1>Edit <%=@team.name%></h1>
+<h2>Remaining Roster Spots: <%=@team.roster_spots%></h2>
 <form action="/teams/<%=@team.id%>/edit" method="post">
   <input id="hidden" type="hidden" name="_method" value="patch">
   <p><label for="team_name">Edit Team Name:</label>
@@ -11,7 +12,7 @@
       <br>
 
       <p><label>Select Players: </label><p>
-        <% @players.sort_by { |player| player.name }.each do |player| %>
+        <% @players.sort_by { |player| player.name.downcase }.each do |player| %>
         <ul>
           <input type="checkbox" name="player_ids[]" value="<%= player.id%>" <%='checked' unless player.team_id.nil? %>><%=player.name%></input>
         </ul>
