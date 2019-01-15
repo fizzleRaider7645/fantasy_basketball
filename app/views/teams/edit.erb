@@ -1,5 +1,6 @@
 <h1>Edit <%=@team.name%></h1>
-<h3>Remaining Roster Spots: <%=@team.roster_spots%></h3>
+<h3><%=@team.roster_spots%> Remaining Roster Spots </h3>
+<h3>Current Players: </h3>
 <% @team.players.each do |player| %>
 <p><%= player.name %></p>
 <% end %>
@@ -9,7 +10,7 @@
   <p><label for="team_name">Edit Team Name:</label>
     <input type="text" name="team_name"><p>
       <br>
-      <label>Create a Custom Player:</label>
+      <label>Create a Custom Player</label>
       <br>
       <label>Name:</label>
       <input  type="text" name="custom_player_name"</input>

@@ -92,9 +92,6 @@ class TeamsController < ApplicationController
 
       #When there are checked players
       if params[:player_ids]
-        # current_ids = current_user.team.players.map { |player| player.id }
-        # incoming_ids = params[:player_ids].map(&:to_i)
-#********************************START TEST******************************************
 
         old_players = current_user.team.players
         new_players = params[:player_ids].map { |id| Player.find(id) }
@@ -113,28 +110,6 @@ class TeamsController < ApplicationController
         new_players.each do |new_player|
           current_user.team.players << new_player unless current_user.team.players.count == 5 && new_player.team_id == nil
         end
-#********************************FIN TEST******************************************
-
-        #the following if statement is needed in case of custom player and checked players
-        # incoming_ids << @custom_player.id if @custom_player
-        #iterating throught current_ids
-        #to check to see if we have a current player not included in incoming_ids
-        # current_ids.each do |id|
-        #   #if id in current_ids is not included in incoming_ids then set player.team_id
-        #   #to nil
-        #   if !incoming_ids.include?(id)
-        #     @former_player = Player.find(id)
-        #     @former_player.team_id = nil
-        #     @former_player.save
-        #   end
-        # end
-
-        #iterating over incoming_ids as these players should be on roster with limit of 5
-        # incoming_ids.take(5).each do |id|
-        #   @player = Player.find(id)
-        #   @player.team_id = current_user.team.id
-        #   @player.save
-        # end
 
         #reset and adjust the team roster_spots count
         current_user.team.roster_spots = 5
@@ -155,6 +130,7 @@ class TeamsController < ApplicationController
     if logged_in? && @team.id == current_user.team.id
       @team.players.clear
       Team.delete(@team.id)
+      binding.pry
       redirect :'/show'
     else
       redirect :'/login'

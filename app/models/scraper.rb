@@ -20,7 +20,9 @@ class Scraper
   def self.create_nba_players
     names = Scraper.get_nba_player_names
     names.each do |name|
-      Player.create(name: name)
+      @player = Player.create(name: name)
+      @player.toggle(:scraped?)
+      @player.save
     end
   end
 

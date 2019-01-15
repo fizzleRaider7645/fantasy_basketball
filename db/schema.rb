@@ -10,11 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_24_182046) do
+ActiveRecord::Schema.define(version: 2019_01_15_170809) do
 
   create_table "players", force: :cascade do |t|
     t.string "name"
     t.integer "team_id"
+    t.boolean "scraped?", default: false, null: false
   end
 
   create_table "teams", force: :cascade do |t|

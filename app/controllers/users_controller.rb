@@ -36,14 +36,14 @@ class UsersController < ApplicationController
     end
   end
 
-  get '/show' do
-    if logged_in?
-      @user = User.find_by(email: current_user[:email])
-      erb :'users/show'
-    else
-      redirect :'/login'
-    end
-  end
+  # get '/show' do
+  #   if logged_in?
+  #     @user = User.find_by(email: current_user[:email])
+  #     erb :'users/show'
+  #   else
+  #     redirect :'/login'
+  #   end
+  # end
 
   get '/show/:id' do
     if logged_in?

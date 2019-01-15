@@ -1,1 +1,7 @@
 <h1>Edit Player</h1>
+<form action="/players/<%=@player.id%>/edit" method="post">
+  <input id="hidden" type="hidden" name="_method" value="patch">
+  <p><label for="player_name">Edit Player Name:</label><p>
+    <input type="text" name="player_name"><p>
+   <input type="submit" value="submit">
+</form>

@@ -4,7 +4,17 @@
 <% else %>
 <h2>Lineup: </h2>
 <% end %>
+<ul>
 <% @team.players.each do |player| %>
-<p><%= player.name %><p>
+  <% if player.scraped? %>
+  <li><%= player.name %></li>
+  <% else %>
+  <li><a href="/players/<%= player.id %>/edit"> <%= player.name %></a>
+  <form method="post" action="/players/<%= player.id %>/delete">
+  <input id="hidden" type="hidden" name="_method" value="DELETE">
+  <input type="submit" value="delete <%= player.name %>">
+  </form></li>
+</ul>
+<% end%>
 <% end %>
 <h3><%= @team.roster_spots %> Roster Spots Available</h3>
