@@ -43,8 +43,7 @@ class UsersController < ApplicationController
 
   get '/users/:id' do
     if logged_in?
-      # @user = User.find_by(id: params[:id])
-      @user = current_user
+      @user = User.find_by(id: params[:id])
       erb :'users/show'
     else
       redirect :'/users/login'
@@ -60,7 +59,7 @@ class UsersController < ApplicationController
     end
   end
 
-  delete '/users/:id/delete' do
+  delete '/users/:id' do
     @user = User.find(params[:id])
     if logged_in? && @user.id == current_user.id
       @user.team.players.clear unless @user.team == nil

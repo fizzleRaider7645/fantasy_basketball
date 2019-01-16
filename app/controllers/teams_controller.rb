@@ -3,7 +3,7 @@ class TeamsController < ApplicationController
     if logged_in?
       erb :'teams/index'
     else
-      redirect :'users/login'
+      redirect :'/users/login'
     end
   end
 
@@ -13,9 +13,9 @@ class TeamsController < ApplicationController
       @team.user_id = current_user.id
       @team.roster_spots = 5
       @team.save
-      redirect :'users/id'
+      redirect :'/users/id'
     else
-      redirect :'users/login'
+      redirect :'/users/login'
     end
   end
 
@@ -24,17 +24,16 @@ class TeamsController < ApplicationController
       @players = Player.all
       erb :'teams/new'
     else
-      redirect :'users/login'
+      redirect :'/users/login'
     end
   end
 
-  get '/teams/show/:id' do
-    #check if logged in
+  get '/teams/:id' do
     if logged_in?
       @team = Team.find(params[:id])
       erb :'teams/show'
     else
-      redirect :'users/login'
+      redirect :'/users/login'
     end
   end
 
@@ -44,12 +43,12 @@ class TeamsController < ApplicationController
       @players = Player.all.uniq { |player| player.name }.select { |player| player.team_id == current_user.team.id || player.team_id == nil }
       erb :'teams/edit'
     else
-      redirect :'users/login'
+      redirect :'/users/login'
     end
   end
 
 
-  patch '/teams/:id/edit' do
+  patch '/teams/:id' do
     if logged_in?
       #team name edit check
       if params[:team_name] != ""
@@ -119,20 +118,20 @@ class TeamsController < ApplicationController
       end
       #end of check when there are checked players and players currently on roster
     else
-      redirect :'users/login'
+      redirect :'/users/login'
     end
-    redirect :'users/:id'
+    redirect :'/users/:id'
     #**************CHECKBOX LOGIC END********************************************
   end
 
-  delete '/teams/:id/delete' do
+  delete '/teams/:id' do
     @team = Team.find(params[:id])
     if logged_in? && @team.id == current_user.team.id
       @team.players.clear
       Team.delete(@team.id)
-      redirect :'users/:id'
+      redirect :'/users/:id'
     else
-      redirect :'users/login'
+      redirect :'/users/login'
     end
   end
 end

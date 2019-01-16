@@ -5,20 +5,20 @@
 <% end %>
 <ul>
   <% if @user.team && current_user.id != @user.id%>
-  <li><a href="/teams/show/<%=@user.team.id%>">See Roster</a></li>
+  <li><a href="/teams/<%=@user.team.id%>">See Roster</a></li>
   <% end %>
   <% if @user.team && current_user.id == @user.id %>
   <li><a href="/users">See League Owners</a></li>
   <li><a href="/teams/<%= @user.team.id %>/edit">Manage Team</a></li>
-  <li><a href="/teams/show/<%=@user.team.id%>">See Roster</a></li>
+  <li><a href="/teams/<%=@user.team.id%>">See Roster</a></li>
   <li><a href="/players">See Players Index</a></li>
   <li><a href="/users/logout">Logout</a></li>
     <br>
-  <li><form method="post" action="/teams/<%= @user.team.id %>/delete">
+  <li><form method="post" action="/teams/<%= @user.team.id %>">
   <input id="hidden" type="hidden" name="_method" value="DELETE">
   <input type="submit" value="delete team">
   </form></li>
-  <li><form method="post" action="/users/<%= @user.id %>/delete">
+  <li><form method="post" action="/users/<%= @user.id %>">
   <input id="hidden" type="hidden" name="_method" value="DELETE">
   <input type="submit" value="delete account">
   </form></li>

@@ -28,7 +28,7 @@ class PlayersController < ApplicationController
     end
   end
 
-  patch '/players/:id/edit' do
+  patch '/players/:id' do
     @player = Player.find(params[:id])
     if logged_in? && !@player.scraped? && current_user.team.id == @player.team_id
       @player.name = params[:player_name]
@@ -39,7 +39,7 @@ class PlayersController < ApplicationController
     end
   end
 
-  delete '/players/:id/delete' do
+  delete '/players/:id' do
     @player = Player.find(params[:id])
     if logged_in? && @player.team_id == current_user.team.id && !@player.scraped?
       Player.delete(@player.id)

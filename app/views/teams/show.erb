@@ -8,10 +8,9 @@
 <p><a href="/players/<%= player.id %>"> <%= player.name %></a></p>
   <% if !player.scraped? %>
   <form method="get" action="/players/<%= player.id %>/edit">
-  <!-- <input id="hidden" type="hidden" name="_method" value="EDIT"> -->
   <input type="submit" value="Edit <%= player.name %>">
   </form>
-  <form method="post" action="/players/<%= player.id %>/delete">
+  <form method="post" action="/players/<%= player.id %>">
   <input id="hidden" type="hidden" name="_method" value="DELETE">
   <input type="submit" value="Delete <%= player.name %>">
   </form>
