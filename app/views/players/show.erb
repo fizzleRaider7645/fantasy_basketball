@@ -1,1 +1,6 @@
 <h1><%= @player.name %></h1>
+<% if @team.nil? %>
+<h2>Free Agent</h2>
+<% else %>
+<h2><%= @team.name %></h2>
+<% end %>

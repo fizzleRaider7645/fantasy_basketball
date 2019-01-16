@@ -2,6 +2,7 @@ class PlayersController < ApplicationController
 
   get '/players' do
     if logged_in?
+      @players = Player.all
       erb :'players/index'
     else
       redirect :'users/login'
@@ -11,19 +12,12 @@ class PlayersController < ApplicationController
   get '/players/:id' do
     if logged_in?
       @player = Player.find(params[:id])
+      @team = Team.find(@player.team_id)
       erb :'players/show'
     else
       redirect :'users/login'
     end
   end
-
-  # get '/players/new' do
-  #   if logged_in?
-  #     erb :'players/new'
-  #   else
-  #     redirect :'users/login'
-  #   end
-  # end
 
   get '/players/:id/edit' do
     @player = Player.find(params[:id])
