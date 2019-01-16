@@ -11,7 +11,7 @@
   <li><a href="/users">See League Owners</a></li>
   <li><a href="/teams/<%= @user.team.id %>/edit">Manage Team</a></li>
   <li><a href="/teams/show/<%=@user.team.id%>">See Roster</a></li>
-  <li><a href="/logout">Logout</a></li>
+  <li><a href="/users/logout">Logout</a></li>
     <br>
   <li><form method="post" action="/teams/<%= @user.team.id %>/delete">
   <input id="hidden" type="hidden" name="_method" value="DELETE">

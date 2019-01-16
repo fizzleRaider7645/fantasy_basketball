@@ -1,56 +1,53 @@
 class UsersController < ApplicationController
 
-  get '/login' do
+  get '/users/login' do
     if logged_in?
-      redirect :'/show'
+      redirect :'/users/:id'
     else
-      erb :'users/login'
+      erb :'/users/login'
     end
   end
 
   post '/login' do
-    user = User.find_by(username: params[:username])
-    if user && user.authenticate(params[:password])
-      session[:user_id] = user.id
-      redirect :'/show'
+    @user = User.find_by(username: params[:username])
+    if @user && @user.authenticate(params[:password])
+      session[:user_id] = @user.id
+      erb :'users/show'
     else
-      redirect :'/login'
+      redirect :'/users/login'
     end
   end
 
-  get '/new' do
+  get '/users/new' do
     if logged_in?
-      redirect :'/show'
+      redirect :'/users/:id'
     else
-      erb :'users/new'
+      erb :'/users/new'
     end
   end
 
   post '/new' do
     if User.exists?(:email => params[:email]) || User.exists?(:username => params[:username])
-      redirect :'/login'
+      redirect :'users/login'
     else
       @user = User.create(params)
       session[:user_id] = @user.id
-      redirect :'/show'
+      erb :'users/show'
     end
   end
 
-  # get '/show' do
-  #   if logged_in?
-  #     @user = User.find_by(email: current_user[:email])
-  #     erb :'users/show'
-  #   else
-  #     redirect :'/login'
-  #   end
-  # end
+  get '/users/logout' do
+    session.clear
+    redirect :'/'
+  end
 
-  get '/show/:id' do
+  get '/users/:id' do
     if logged_in?
-      @user = User.find_by(id: params[:id])
+      # @user = User.find_by(id: params[:id])
+      @user = current_user
       erb :'users/show'
     else
-      redirect :'/login'
+      redirect :'/users/login'
     end
   end
 
@@ -59,13 +56,8 @@ class UsersController < ApplicationController
       @users = User.all
       erb :'users/index'
     else
-      redirect :'/login'
+      redirect :'/users/login'
     end
-  end
-
-  get '/logout' do
-    session.clear
-    redirect :'/'
   end
 
   delete '/users/:id/delete' do
@@ -74,9 +66,9 @@ class UsersController < ApplicationController
       @user.team.players.clear unless @user.team == nil
       Team.delete(@user.team.id)
       User.delete(@user.id)
-      redirect :'/logout'
+      redirect :'/users/logout'
     else
-      redirect :'/login'
+      redirect :'/users/login'
     end
   end
 
