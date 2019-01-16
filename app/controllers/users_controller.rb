@@ -4,7 +4,7 @@ class UsersController < ApplicationController
     if logged_in?
       redirect :'/users/:id'
     else
-      erb :'/users/login'
+      erb :'users/login'
     end
   end
 
@@ -22,7 +22,7 @@ class UsersController < ApplicationController
     if logged_in?
       redirect :'/users/:id'
     else
-      erb :'/users/new'
+      erb :'users/new'
     end
   end
 

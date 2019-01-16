@@ -4,32 +4,33 @@ class PlayersController < ApplicationController
     if logged_in?
       erb :'players/index'
     else
-      redirect :'/login'
+      redirect :'users/login'
     end
   end
 
   get '/players/:id' do
     if logged_in?
+      @player = Player.find(params[:id])
       erb :'players/show'
     else
-      redirect :'/login'
+      redirect :'users/login'
     end
   end
 
-  get '/players/new' do
-    if logged_in?
-      erb :'players/new'
-    else
-      redirect :'/login'
-    end
-  end
+  # get '/players/new' do
+  #   if logged_in?
+  #     erb :'players/new'
+  #   else
+  #     redirect :'users/login'
+  #   end
+  # end
 
   get '/players/:id/edit' do
     @player = Player.find(params[:id])
     if logged_in? && !@player.scraped? && current_user.team.id == @player.team_id
       erb :'players/edit'
     else
-      redirect :'/login'
+      redirect :'users/login'
     end
   end
 
@@ -38,9 +39,9 @@ class PlayersController < ApplicationController
     if logged_in? && !@player.scraped? && current_user.team.id == @player.team_id
       @player.name = params[:player_name]
       @player.save
-      redirect :'/show'
+      redirect :'users/:id'
     else
-      redirect :'/login'
+      redirect :'users/login'
     end
   end
 
@@ -50,9 +51,9 @@ class PlayersController < ApplicationController
       Player.delete(@player.id)
       current_user.team.roster_spots += 1
       current_user.team.save
-      redirect :'/show'
+      redirect :'users/:id'
     else
-      redirect :'/login'
+      redirect :'users/login'
     end
   end
 end
